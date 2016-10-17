@@ -58,6 +58,7 @@ public class View extends JPanel{
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 				System.out.println("CLOSE Button clicked.");
 			}
 		});
