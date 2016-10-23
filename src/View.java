@@ -1,11 +1,13 @@
 import java.awt.event.*;
 import javax.swing.*;
+import java.io.File;
 
 @SuppressWarnings("serial")
 public class View extends JPanel{
 	JFrame frame;
 	Control control;
 	JLabel emptyLabel;
+	JFileChooser fileChooser = new JFileChooser();
     
 	public View(Control control) 
 	{		
@@ -16,6 +18,7 @@ public class View extends JPanel{
         
 		frame.setSize(1024, 768);
 		frame.add(this);
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		//this.setLayout(null);
 	}
 	/*
@@ -51,6 +54,12 @@ public class View extends JPanel{
 			public void actionPerformed(ActionEvent e) 
 			{
 				System.out.println("LOAD Button clicked.");
+				int result = fileChooser.showOpenDialog(getParent());
+				if (result == JFileChooser.APPROVE_OPTION) {
+				    // user selects a file
+				    File selectedFile = fileChooser.getSelectedFile();
+				    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+				}
 			}
 		});
 		
