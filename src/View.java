@@ -20,8 +20,9 @@ public class View extends JPanel{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
         
-		frame.setSize(500, 300);
+		frame.setSize(500, 250);
 		frame.add(this);
+		frame.setLocationRelativeTo(null);
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		//this.setLayout(null);
 	}
@@ -32,7 +33,7 @@ public class View extends JPanel{
 
 		frame.add(loadButton);
 		frame.add(closeButton);
-		loadButton.setBounds(50, 100, 200, 20);
+		loadButton.setBounds(50, 100, 170, 20);
 		closeButton.setBounds(350, 100, 100, 20);
         //Display the window.
         //frame.pack();
