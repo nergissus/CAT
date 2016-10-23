@@ -1,6 +1,9 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+
+import org.apache.commons.io.FilenameUtils;
 
 @SuppressWarnings("serial")
 public class View extends JPanel{
@@ -8,6 +11,7 @@ public class View extends JPanel{
 	Control control;
 	JLabel emptyLabel;
 	JFileChooser fileChooser = new JFileChooser();
+	int dialogButton = JOptionPane.YES_NO_OPTION;
     
 	public View(Control control) 
 	{		
@@ -16,26 +20,11 @@ public class View extends JPanel{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
         
-		frame.setSize(1024, 768);
+		frame.setSize(500, 300);
 		frame.add(this);
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		//this.setLayout(null);
 	}
-	/*
-    private void createAndShowFrame() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("CAT");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
-        JLabel emptyLabel = new JLabel("");
-        emptyLabel.setPreferredSize(new Dimension(175, 100));
-        frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
- 
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-    }
-    */
 	
 	public void drawWindow() { 
 		JButton loadButton = new JButton("LOAD EXCEL FILE...");
@@ -43,8 +32,8 @@ public class View extends JPanel{
 
 		frame.add(loadButton);
 		frame.add(closeButton);
-		loadButton.setBounds(250, 340, 200, 30);
-		closeButton.setBounds(600, 340, 100, 30);
+		loadButton.setBounds(50, 100, 200, 20);
+		closeButton.setBounds(350, 100, 100, 20);
         //Display the window.
         //frame.pack();
         frame.setVisible(true);
@@ -58,7 +47,28 @@ public class View extends JPanel{
 				if (result == JFileChooser.APPROVE_OPTION) {
 				    // user selects a file
 				    File selectedFile = fileChooser.getSelectedFile();
-				    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+				    String filename = selectedFile.getName();
+				    System.out.println("Selected file: " + selectedFile.getAbsolutePath() + 
+				    		" and its extension is: " + FilenameUtils.getExtension(filename));
+				    if ((FilenameUtils.isExtension(filename,"xls")) || (FilenameUtils.isExtension(filename,"xlsx")) ) {
+				    	int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure to load " +
+				    			"\""+ filename + "\"" ,"Warning",dialogButton);
+				    	if(dialogResult == JOptionPane.YES_OPTION){
+					        try {
+								Model.parseExcel(selectedFile);
+							} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+								JOptionPane.showMessageDialog(null, "File not found, try again!");
+							}
+				    	}
+				    	else {
+				    		System.out.println("User has chosen not to parse excel.");
+				    	}
+				    }
+				    else {
+				    	JOptionPane.showMessageDialog(null, "Please, choose an excel file.");
+				    }
 				}
 			}
 		});
@@ -67,8 +77,8 @@ public class View extends JPanel{
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 				System.out.println("CLOSE Button clicked.");
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 			}
 		});
 	}
